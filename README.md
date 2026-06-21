@@ -3,68 +3,76 @@
 > **Sui Overflow 2026 Hackathon**  
 > *Work. Verify. Pay. Automatically.*
 
-Accord is the world's first autonomous work verification and payment protocol. It sits trustlessly between clients and service providers, using an autonomous AI Agent (**Arca**) to analyze and verify deliverables uploaded to **Walrus Storage**, automatically releasing escrowed **USDsui** milestone payments via Sui Programmable Transaction Blocks (PTBs).
+---
+
+## 🔍 Overview & Core Vision
+
+### 🔴 The Problem in One Line
+Global freelancing suffers from high fees, payment delays, and trust disputes due to subjective manual work verification.
+
+### ❓ Why This Matters
+In the global remote work economy ($1.5T annually), **71% of freelancers** face non-payment issues, and payments are delayed by **22 days** on average. Cross-border payments are plagued by high platform fees (up to 20% on Upwork/Fiverr) and expensive wire transfer delays.
+
+### 🧱 Three Layers of the Problem
+1. **Agreement Layer (Human Friction)**: Work specifications are written in loose email threads or static PDFs, leading to subjective interpretations and scope creep.
+2. **Verification Layer (Execution Friction)**: Checking if a deliverable actually matches the project brief requires manual review, which clients often delay or neglect.
+3. **Payment Layer (Financial Friction)**: Escrows are slow to release, manual, and expensive to settle internationally.
 
 ---
 
-## 🧭 The Core Concept & Vision
+## 💡 The Solution
 
-In traditional freelancing and contract markets, trust is expensive. Platforms like Upwork charge up to 20% in fees, while direct contract transactions suffer from non-payment, delayed wire transfers, and disputes. 
-
-Accord solves this by shifting trust to cryptographic and agentic enforcement:
-- **Zero-Friction Authentication**: Users login seamlessly using **Sui zkLogin** (e.g., using a standard Google OAuth account). No wallet extensions or private key seed phrases are needed.
-- **Autonomous Escrow Verification**: The contract amount is held securely in a Sui smart contract. Milestone deliverables are uploaded to **Walrus testnet** (immutable and decentralized storage).
-- **The Arca Agent**: An AI evaluator (built on Groq LLM) fetches the deliverable from Walrus, evaluates it against the covenant guidelines, and atomically triggers payment release if requirements are met.
-- **Sealed Proof Certificates**: Every successful delivery generates a cryptographic Proof Certificate, stored permanently on Walrus, creating a portable reputation profile.
+Accord is the world's first **autonomous work verification and payment protocol**. It automates escrow and verification using three core pillars:
+- **Autonomous Escrow**: Funds are locked in a Sui Smart Contract and released instantly net of a small **0.5% (50 bps) protocol fee**.
+- **AI Agent Verification (Arca)**: An AI agent powered by Groq LLM inspects files uploaded to **Walrus Storage** against the covenant specifications.
+- **zkLogin Authentication**: Seamless Web2 login experience (like sign-in with Google) generating non-custodial Sui accounts behind the scenes.
 
 ---
 
-## 🎨 System Flow & Architecture Diagrams
+## ✨ What Makes Accord Unique
 
-### 1. Conceptual Flow (How it Works)
+1. **Capability-Based Escrow**: Only the authorized `ArcaCap` capability (held by the autonomous Arca Agent) can mutate milestone states or release escrowed payments, rendering unauthorized hacks impossible.
+2. **zkLogin Integration**: Contractors and clients log in with Web2 Google OAuth. The system automatically provisions a non-custodial Sui account. No seed phrases, no extension downloads.
+3. **Decentralized Blob Storage via Walrus**: Submissions are stored on Walrus testnet. A cryptographically sealed **Proof Certificate** is generated and written back to Walrus permanently for every milestone completion.
+4. **On-Chain Reputation Profiles**: Every successful milestone adds to the contractor's immutable, on-chain reputation profile, creating portable trust that isn't locked inside a single web platform.
 
-```
-   1. COVENANT CREATION          2. ESCROW FUNDING           3. WORK DELIVERY         4. AUTONOMOUS PAYOUT
-  +-----------------------+   +---------------------+   +---------------------+   +---------------------+
-  | Client details brief  |   | Escrow initialized  |   | Contractor uploads  |   | Arca Agent verifies |
-  | in plain English. AI  |-->| with USDsui coins.  |-->| milestone work      |-->| deliverable against |
-  | structures covenants  |   | Secured on-chain.   |   | directly to Walrus. |   | brief & pays out.   |
-  +-----------------------+   +---------------------+   +---------------------+   +---------------------+
-```
+---
 
-### 2. High-Level Architecture
+## 🎨 Technical & System Architecture
+
+### 1. Conceptual Architecture
 
 ```
 +-------------------------------------------------------------------------------------+
-|                                   ACCORD SYSTEM                                     |
+|                                   ACCORD PROTOCOL                                   |
 +-------------------------------------------------------------------------------------+
 |                                                                                     |
-|    +----------------------+                         +---------------------------+   |
-|    |     Client UI        |                         |      Contractor UI        |   |
-|    +----------+-----------+                         +-------------+-------------+   |
-|               | (Google zkLogin)                                  | (Google zkLogin) |
+|   +-----------------------+                         +---------------------------+   |
+|   |       Client          |                         |        Contractor         |   |
+|   |   (zkLogin Wallet)    |                         |     (zkLogin Wallet)      |   |
+|   +-----------+-----------+                         +-------------+-------------+   |
+|               | (Covenant Setup)                                  | (Milestone Delivery)
 |               v                                                   v                 |
-|    +----------------------------------------------------------------------------+   |
-|    |                              Next.js Frontend                              |   |
-|    +----------+---------------------------+---------------------------+---------+   |
-|               |                           |                           |             |
-|               | 1. Submit Brief           | 2. Upload Blob            | 4. Fetch Event
+|   +-----------------------------------------------------------------------------+   |
+|   |                              Next.js Frontend                               |   |
+|   +-----------+---------------------------+---------------------------+---------+   |
+|               | (AI Parser)               | (Store File)              | (Listen Events)
 |               v                           v                           v             |
 |      +-----------------+         +-----------------+         +------------------+   |
-|      |   Arca Agent    |         |  Walrus Storage |         |  Sui Blockchain  |   |
-|      |   (Groq LLM)    |         | (Decentralized  |         | (Covenant contract|  |
-|      |                 |         |   Blob Store)   |         |  & USDsui Escrow)|  |
+|      |   Arca Agent    |         | Walrus Storage  |         |  Sui Blockchain  |   |
+|      |   (Groq LLM)    |         | (Decentralized  |         | (Covenant.move   |   |
+|      |                 |         |   Blob Store)   |         |  Escrow Contract)|   |
 |      +--------+--------+         +--------+--------+         +--------+---------+   |
 |               |                           ^                           ^             |
-|               | 3. Read Deliverable       |                           |             |
+|               | 1. Read File              |                           |             |
 |               +---------------------------+                           |             |
 |               |                                                       |             |
-|               +------------------ 5. Automate PTB Release ------------+             |
+|               +------------------ 2. Execute PTB Payment Release -----+             |
 |                                                                                     |
 +-------------------------------------------------------------------------------------+
 ```
 
-### 3. Detailed Sequence Diagram
+### 2. Transaction Sequence Flow
 
 ```mermaid
 sequenceDiagram
@@ -76,41 +84,144 @@ sequenceDiagram
     participant Walrus as Walrus storage
     participant Sui as Sui Blockchain
 
-    Note over Client, Sui: Setup & Creation
-    Client->>UI: Sign in via Google zkLogin
-    Client->>UI: Input plain English agreement
-    UI->>Agent: Parse text to structured milestone JSON
-    Agent-->>UI: Return structured milestones
-    Client->>UI: Confirm & Sign creation PTB
-    UI->>Sui: Execute creation & Lock USDsui in Escrow
-    Sui-->>UI: Covenant Object Created (`covenant.move`)
-    
-    Note over Contractor, Sui: Milestone Delivery
-    Contractor->>UI: Sign in via Google zkLogin
-    Contractor->>UI: Select active covenant & Upload deliverable file
-    UI->>Walrus: Store deliverable file (Blob)
+    Client->>UI: Create Covenant (e.g. "Pay $100 for a React component")
+    UI->>Agent: Send brief text
+    Agent-->>UI: Parse and return structured milestones JSON
+    Client->>UI: Sign & Approve Covenant Creation
+    UI->>Sui: Deploy Covenant Shared Object & Escrow USDsui
+    Sui-->>UI: Emits `CovenantCreated` Event
+
+    Contractor->>UI: Upload deliverable file
+    UI->>Walrus: Store file (decentralized blob)
     Walrus-->>UI: Return Blob ID
     UI->>Sui: Register Deliverable to milestone on-chain
-    Sui-->>UI: Deliverable Registered Event
+    Sui-->>Agent: Emits `DeliveryRecorded` Event
 
-    Note over Agent, Sui: Verification & Autonomous Release
-    Agent->>Sui: Listen for Deliverable event
-    Agent->>Walrus: Fetch deliverable blob
-    Agent->>Agent: Analyze content against milestone specs
-    alt Confidence score >= 80% (Pass)
-        Agent->>Sui: Sign & Execute atomic `release_milestone_payment` PTB
-        Sui->>Sui: Collect 0.5% Protocol Fee
-        Sui->>Contractor: Transfer remaining milestone funds
-        Sui->>Walrus: Write Permanent Proof Certificate Blob
-        Sui-->>UI: MilestoneReleased Event (Paid out!)
-    else Confidence score < 80% (Review needed)
-        Agent-->>UI: Flag milestone for Client review or Contractor revision
+    Agent->>Walrus: Download deliverable blob
+    Agent->>Agent: Inspect deliverable against milestone requirements
+    alt Confidence score >= 80%
+        Agent->>Sui: Execute `release_milestone_payment` PTB (using ArcaCap)
+        Sui->>Sui: Collect 0.5% Protocol Fee to Treasury
+        Sui->>Contractor: Transfer 99.5% Escrowed Payout
+        Sui->>Walrus: Write Signed Proof Certificate
+        Sui-->>UI: Emits `MilestoneReleased` Event
+    else Confidence score < 80%
+        Agent-->>UI: Reject delivery & request revision
     end
 ```
 
 ---
 
-## 🛠️ Codebase Structure
+## 💻 Ecosystem Integration & Code Snippets
+
+### 1. Walrus Blob Storage Integration (`frontend/lib/walrus.ts`)
+Contractors upload milestone deliverables directly to the Walrus Testnet blob publisher:
+
+```typescript
+import axios from 'axios';
+
+const PUBLISHER_URL = 'https://publisher.walrus-testnet.walrus.space';
+const DELIVERABLE_EPOCHS = 5; // Reduced retention for testnet demo
+
+export async function storeDeliverable(file: File) {
+  const buffer = await file.arrayBuffer();
+
+  const response = await axios.put(
+    `${PUBLISHER_URL}/v1/blobs?epochs=${DELIVERABLE_EPOCHS}`,
+    buffer,
+    { headers: { 'Content-Type': 'application/octet-stream' } }
+  );
+
+  const blobId = response.data?.newlyCreated?.blobObject?.blobId || response.data?.alreadyCertified?.blobId;
+  return {
+    blobId,
+    viewUrl: `https://aggregator.walrus-testnet.walrus.space/v1/blobs/${blobId}`
+  };
+}
+```
+
+### 2. Sui Capability & Escrow Logic (`contracts/accord/sources/covenant.move`)
+Capability-based access ensures only the Arca agent holds the administrative `ArcaCap` required to release payments:
+
+```move
+module accord::covenant {
+    use sui::balance::Balance;
+    use sui::coin::Coin;
+    use sui::object::{Self, ID, UID};
+    use accord::usdsui::USDSUI;
+
+    public struct ArcaCap has key, store { id: UID }
+
+    public struct Milestone has store {
+        payout_amount: u64,
+        status: u8, // PENDING, DELIVERED, RELEASED, DISPUTED
+        walrus_blob_id: Option<vector<u8>>,
+    }
+
+    public struct Covenant has key, store {
+        id: UID,
+        client: address,
+        contractor: address,
+        escrow: Balance<USDSUI>,
+        milestones: vector<Milestone>,
+    }
+
+    // Only accounts holding the ArcaCap can trigger payment releases
+    public fun release_milestone_payment(
+        _cap: &ArcaCap,
+        covenant: &mut Covenant,
+        milestone_index: u64,
+        treasury: address,
+        ctx: &mut TxContext
+    ): (Coin<USDSUI>, Coin<USDSUI>) {
+        let milestone = vector::borrow_mut(&mut covenant.milestones, milestone_index);
+        assert!(milestone.status == 1, 101); // Assert STATUS_DELIVERED
+
+        let total_payout = milestone.payout_amount;
+        let fee_amount = (total_payout * 50) / 10000; // 0.5% Protocol fee
+        let net_payout = total_payout - fee_amount;
+
+        milestone.status = 2; // Set STATUS_RELEASED
+
+        let fee_coin = coin::from_balance(balance::split(&mut covenant.escrow, fee_amount), ctx);
+        let contractor_coin = coin::from_balance(balance::split(&mut covenant.escrow, net_payout), ctx);
+
+        (contractor_coin, fee_coin)
+    }
+}
+```
+
+### 3. Gasless / Sponsored Transactions (`frontend/lib/sponsored-tx.ts`)
+To make the UX seamless for Web2 users, transaction gas fees can be sponsored by the protocol:
+
+```typescript
+import { Transaction } from '@mysten/sui/transactions';
+
+export async function buildSponsoredTransaction(
+  tx: Transaction,
+  senderAddress: string
+): Promise<{ bytes: string; signature: string }> {
+  // Call sponsor gas station endpoint
+  const response = await fetch('/api/sponsor-tx', {
+    method: 'POST',
+    body: JSON.stringify({ txBytes: await tx.build(), senderAddress }),
+  });
+  return response.json();
+}
+```
+
+---
+
+## 📍 Deployed Contracts
+
+The Accord smart contract is compiled, verified, and deployed on the **Sui Testnet** at:
+```
+0x832f93729a8b1dfe9dd8067536dfa35231cf019f9401afe04a398df6d18c54cb
+```
+
+---
+
+## 🛠️ Repository Structure
 
 ```
 Accord/
@@ -142,97 +253,61 @@ Accord/
 
 ---
 
-## 🚀 Setup & Execution Instructions
-
-Follow these instructions to run Accord locally.
-
-### Prerequisites
-- [Node.js v18+](https://nodejs.org/)
-- [Sui CLI](https://docs.sui.io/guides/developer/getting-started/sui-install) (for contract validation/deployment)
-
----
+## 🚀 Local Setup & Environment
 
 ### Step 1 · Frontend Setup
-
-1. Navigate to the `frontend/` directory:
+1. Navigate to the `frontend/` directory and copy the environment template:
    ```bash
    cd frontend
-   ```
-2. Copy the environment variables:
-   ```bash
    cp .env.example .env
-   ```
-3. Open `.env` and fill in your Google Client ID for zkLogin (see **Google OAuth Setup** below).
-4. Install dependencies:
-   ```bash
-   npm install
-   ```
-5. Launch the Next.js development server:
-   ```bash
-   npm run dev
-   ```
-   Open `http://localhost:3000` in your browser.
-
----
-
-### Step 2 · Google OAuth / zkLogin Setup (3 minutes)
-
-Accord uses **zkLogin** to turn a standard Google Account into a secure, non-custodial Sui wallet. Without these credentials, the Google login button will be disabled (though you can still connect browser wallet extensions like Sui Wallet).
-
-1. Go to the **[Google Cloud Console Credentials Page](https://console.cloud.google.com/apis/credentials)**.
-2. Click **Create Credentials** -> **OAuth 2.0 Client ID**.
-3. Choose **Web application** as the application type.
-4. Add the following to **Authorized redirect URIs**:
-   - `http://localhost:3000/auth/callback`
-5. Click **Create** and copy the generated **Client ID** (e.g., `xxxx.apps.googleusercontent.com`).
-6. Paste it into `frontend/.env`:
-   ```env
-   NEXT_PUBLIC_GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLIENT_ID_HERE
-   ```
-7. Restart the frontend dev server (`npm run dev`). The Google zkLogin option will now be active.
-
----
-
-### Step 3 · Arca Agent Setup (Optional)
-
-The frontend automatically falls back to local covenant parsing and client-executed manually triggered releases if the agent is offline. To enable autonomous verification:
-
-1. Navigate to the `agent/` directory:
-   ```bash
-   cd agent
    ```
 2. Install dependencies:
    ```bash
    npm install
    ```
-3. Copy the environment variables and fill them in:
+3. Run the development server:
    ```bash
-   cp .env.example .env
+   npm run dev
    ```
-4. Start the agent server:
-   ```bash
-   npm run start
-   ```
-   The agent will run on port `3001` and listen for contract events.
+   Open `http://localhost:3000`.
 
 ---
 
-## 🎮 How to Demo the App (End-to-End Walkthrough)
+### Step 2 · Google zkLogin Setup
+Accord uses Google zkLogin to bypass Web3 wallets setup.
+1. Create a client ID on the **[Google Cloud Console Credentials Page](https://console.cloud.google.com/apis/credentials)**.
+2. Choose **Web application** and add authorized redirect URI:
+   - `http://localhost:3000/auth/callback`
+3. Copy your Client ID and add it to `frontend/.env`:
+   ```env
+   NEXT_PUBLIC_GOOGLE_CLIENT_ID=YOUR_CLIENT_ID_HERE.apps.googleusercontent.com
+   ```
+4. Restart the Next.js server to enable zkLogin.
 
-To simulate a complete workflow as both the Client and the Contractor:
+---
 
-1. **Log in**: Open `http://localhost:3000` and sign in with Google (via zkLogin) or connect your Sui browser wallet extension.
-2. **Create a Covenant**:
-   - Click **Create a Covenant**.
-   - Use the conversational input bar or write a brief: *"Pay 100 USDsui for a high-res design. 50% on draft, 50% on final files."*
-   - Review the structured timeline parsed by the AI.
-   - Click **Create & Fund Covenant** (escrowing mock USDsui into the covenant contract).
-3. **Submit Deliverables (as Contractor)**:
-   - On the Covenant Details page, locate the active milestone.
-   - Upload any file (like an image or a PDF) via the **Delivery Upload** card. The file is uploaded directly to **Walrus Testnet**.
-4. **Autonomous AI Release**:
-   - Arca intercepts the event, downloads the file from Walrus, and evaluates it.
-   - Once verified, the AI executes the PTB, which splits the escrow, collects a **0.5% protocol fee**, sends the remaining 99.5% to the contractor, and stores a certificate proof on Walrus.
-5. **Dispute Flow**:
-   - At any time prior to release, the client can click **Raise Dispute** on any milestone.
-   - This starts a **48-hour challenge window** on-chain. If the dispute is escalated, funds remain locked until resolved by arbitration.
+### Step 3 · Arca Agent Setup
+1. Navigate to the `agent/` directory:
+   ```bash
+   cd agent
+   npm install
+   ```
+2. Setup environment keys:
+   ```bash
+   cp .env.example .env
+   ```
+   Fill in your LLM provider key (Groq/Anthropic) and Arca wallet private key.
+3. Start the agent:
+   ```bash
+   npm run start
+   ```
+
+---
+
+## 🕹️ End-to-End Test Flow
+
+1. **Sign In**: Log in with Google via **zkLogin** on `http://localhost:3000` to automatically obtain a Sui wallet address.
+2. **Covenant Chat Draft**: Type *"Pay 100 mock USDsui for a logo design. 50% on draft, 50% on final files"* into the Arca AI Chat box.
+3. **Escrow Funding**: Click **Create & Fund Covenant** to sign the PTB and lock Mock USDSUI tokens into the smart contract escrow.
+4. **Deliver Milestone**: Switch view to Contractor, upload any image/file deliverable. It is securely saved on Walrus testnet.
+5. **AI Review & Auto-pay**: Arca listens to the on-chain event, checks the Walrus file content against the brief requirements, executes the atomic payout PTB, and deposits funds into the Contractor's zkLogin wallet automatically.
