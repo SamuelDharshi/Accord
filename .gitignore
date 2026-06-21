@@ -1,0 +1,38 @@
+# ── Root gitignore for Accord monorepo ──────────────────────────────────────
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.claude/
+
+# ── Frontend (Next.js) ───────────────────────────────────────────────────────
+frontend/.env
+frontend/.env.local
+frontend/.next/
+frontend/node_modules/
+frontend/out/
+frontend/.vercel
+frontend/tsconfig.tsbuildinfo
+frontend/scratch/
+
+# ── Agent (Node.js) ──────────────────────────────────────────────────────────
+agent/.env
+agent/.env.local
+agent/node_modules/
+agent/dist/
+
+# ── Contracts (Sui Move) ─────────────────────────────────────────────────────
+contracts/.env
+contracts/build/
+
+# ── Scratch / temp files ─────────────────────────────────────────────────────
+*.tmp
+*.temp
+test-results-agent.txt
