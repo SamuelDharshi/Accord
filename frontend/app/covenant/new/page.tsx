@@ -54,24 +54,35 @@ export default function NewCovenantPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description: userText }),
       });
-      if (!res.ok) return null;
-      return (await res.json()) as ParsedCovenant;
-    } catch {
-      // Fallback: client-side extraction for demo
-      return extractCovenantLocally(userText);
+      if (res.ok) {
+        return (await res.json()) as ParsedCovenant;
+      }
+    } catch (e) {
+      console.warn("Agent parsing failed, falling back to local extraction", e);
     }
+    // Fallback: client-side extraction for demo
+    return extractCovenantLocally(userText);
   };
 
   // Simple local extraction fallback for demos without a live agent.
   const extractCovenantLocally = (text: string): ParsedCovenant => {
-    const amountMatch = text.match(/\$(\d[\d,]*)/);
-    const totalAmount = amountMatch ? parseInt(amountMatch[1].replace(/,/g, ''), 10) : 500;
+    // Match any sequence of digits representing the amount, with or without $ prefix/suffix
+    const digitsMatch = text.match(/\b\d+(?:,\d+)?\b/);
+    const totalAmount = digitsMatch ? parseInt(digitsMatch[0].replace(/,/g, ''), 10) : 500;
+    
+    let title = "Accord Agreement";
+    if (text.toLowerCase().includes("design a logo") || text.toLowerCase().includes("logo")) {
+      title = "Logo Design Project";
+    } else if (text.length > 5) {
+      title = text.slice(0, 60).trim() + (text.length > 60 ? '…' : '');
+    }
+
     return {
-      title: text.slice(0, 60).trim() + (text.length > 60 ? '…' : ''),
+      title,
       totalAmountUsd: totalAmount,
       milestones: [
-        { description: 'Initial delivery', percentageBps: 5000 },
-        { description: 'Final delivery', percentageBps: 5000 },
+        { description: 'Initial Draft Delivery', percentageBps: 5000 },
+        { description: 'Final Artifact Delivery', percentageBps: 5000 },
       ],
       isConfidential: false,
     };
