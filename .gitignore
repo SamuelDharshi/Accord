@@ -13,8 +13,7 @@ Thumbs.db
 .claude/
 
 # ── Frontend (Next.js) ───────────────────────────────────────────────────────
-frontend/.env
-frontend/.env.local
+frontend/.env*
 frontend/.next/
 frontend/node_modules/
 frontend/out/
@@ -23,14 +22,13 @@ frontend/tsconfig.tsbuildinfo
 frontend/scratch/
 
 # ── Agent (Node.js) ──────────────────────────────────────────────────────────
-agent/.env
-agent/.env.local
+agent/.env*
 agent/node_modules/
 agent/dist/
 
 # ── Contracts (Sui Move) ─────────────────────────────────────────────────────
-contracts/.env
-contracts/build/
+contracts/.env*
+**/build/
 
 # ── Scratch / temp files ─────────────────────────────────────────────────────
 *.tmp
