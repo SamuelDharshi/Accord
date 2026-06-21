@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,18 +6,18 @@
 
 @layer base {
   :root {
-    --color-bg-deep: #080D1A;
-    --color-surface: #0E1526;
-    --color-elevated: #162035;
-    --color-border: #1E2D4A;
-    --color-blue: #4F8EF7;
-    --color-violet: #8B5CF6;
-    --color-emerald: #10B981;
-    --color-amber: #F59E0B;
-    --color-red: #EF4444;
-    --color-text-primary: #E2E8F5;
-    --color-text-secondary: #7B8DB0;
-    --color-text-tertiary: #3D4F6A;
+    --color-bg-deep: #0D0F14; /* Deep dark slate */
+    --color-surface: #171922; /* Neo brutalist card dark surface */
+    --color-elevated: #212431;
+    --color-border: #000000; /* Brutalist thick black borders */
+    --color-blue: #3E8BFF; /* Saturated neo blue */
+    --color-violet: #A855F7; /* Saturated neo violet */
+    --color-emerald: #10B981; /* Saturated neo green */
+    --color-amber: #FBBF24; /* Stark neo yellow */
+    --color-red: #F87171; /* Stark neo red */
+    --color-text-primary: #F3F4F6;
+    --color-text-secondary: #9CA3AF;
+    --color-text-tertiary: #4B5563;
   }
 
   * {
@@ -35,124 +35,169 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Neo-brutalist typography for titles */
+  h1, h2, h3, .brutalist-title {
+    font-family: 'Syne', 'DM Sans', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 10px;
   }
   ::-webkit-scrollbar-track {
     background: var(--color-bg-deep);
+    border-left: 3px solid #000000;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: 3px;
+    background: var(--color-blue);
+    border: 3px solid #000000;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-text-tertiary);
+    background: var(--color-violet);
   }
 
   /* Focus styles */
   *:focus-visible {
-    outline: 2px solid var(--color-blue);
+    outline: 3px solid var(--color-violet);
     outline-offset: 2px;
-    border-radius: 4px;
   }
 
   /* Selection */
   ::selection {
-    background: rgba(79, 142, 247, 0.3);
-    color: var(--color-text-primary);
+    background: var(--color-blue);
+    color: #000000;
   }
 }
 
 @layer components {
   /* ── Card styles ─────────────────────────────────────────────────── */
   .card {
-    @apply bg-bg-surface border border-bg-border rounded-2xl;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    background: var(--color-surface);
+    border: 3px solid #000000;
+    border-radius: 8px;
+    box-shadow: 6px 6px 0px 0px #000000;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px 0px #000000;
   }
 
   .card-elevated {
-    @apply bg-bg-elevated border border-bg-border rounded-2xl;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    background: var(--color-elevated);
+    border: 3px solid #000000;
+    border-radius: 8px;
+    box-shadow: 8px 8px 0px 0px #000000;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card-elevated:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 11px 11px 0px 0px #000000;
   }
 
   /* ── Button styles ───────────────────────────────────────────────── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white transition-all duration-200;
-    background: linear-gradient(135deg, #4F8EF7 0%, #6B7EF7 100%);
-    box-shadow: 0 4px 16px rgba(79, 142, 247, 0.3);
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm text-black transition-all duration-100;
+    background: var(--color-blue);
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px 0px #000000;
   }
   .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 24px rgba(79, 142, 247, 0.45);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px #000000;
+    background: #5ba1ff;
   }
   .btn-primary:active {
-    transform: translateY(0);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px #000000;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-text-secondary border border-bg-border transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm text-text-primary transition-all duration-100;
+    background: transparent;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px 0px #000000;
   }
   .btn-ghost:hover {
-    @apply text-text-primary border-accord-blue;
-    background: rgba(79, 142, 247, 0.08);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px #000000;
+  }
+  .btn-ghost:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px #000000;
   }
 
   .btn-emerald {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white transition-all duration-200;
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm text-black transition-all duration-100;
+    background: var(--color-emerald);
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px 0px #000000;
   }
   .btn-emerald:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.45);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px #000000;
+    background: #34d399;
+  }
+  .btn-emerald:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px #000000;
   }
 
   /* ── Input styles ────────────────────────────────────────────────── */
   .input {
-    @apply w-full bg-bg-elevated border border-bg-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-tertiary text-sm transition-all duration-200;
+    @apply w-full bg-bg-surface border-2 border-black rounded-lg px-4 py-3 text-text-primary placeholder:text-text-tertiary text-sm transition-all duration-100;
+    border: 3px solid #000000;
+    box-shadow: 3px 3px 0px 0px #000000;
   }
   .input:focus {
-    @apply border-accord-blue outline-none;
-    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.15);
+    outline: none;
+    border-color: var(--color-blue);
+    box-shadow: 5px 5px 0px 0px #000000;
   }
 
   /* ── Mono values ─────────────────────────────────────────────────── */
   .amount {
-    @apply font-mono font-semibold;
+    @apply font-mono font-bold text-black bg-white px-2 py-0.5 border-2 border-black shadow-[2px_2px_0px_0px_#000];
+    border-radius: 4px;
   }
 
   .hash {
-    @apply font-mono text-xs text-text-secondary;
+    @apply font-mono text-xs text-text-secondary bg-[#1a1c27] px-2 py-1 border border-black;
+    border-radius: 4px;
   }
 
   /* ── Status badges ───────────────────────────────────────────────── */
   .badge-pending {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
-    background: rgba(245, 158, 11, 0.12);
-    color: #F59E0B;
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    @apply inline-flex items-center gap-1.5 px-3 py-1 border-2 border-black text-xs font-bold text-black;
+    background: var(--color-amber);
+    box-shadow: 2px 2px 0px 0px #000000;
+    border-radius: 4px;
   }
 
   .badge-review {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
-    background: rgba(139, 92, 246, 0.12);
-    color: #8B5CF6;
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    @apply inline-flex items-center gap-1.5 px-3 py-1 border-2 border-black text-xs font-bold text-black;
+    background: var(--color-violet);
+    box-shadow: 2px 2px 0px 0px #000000;
+    border-radius: 4px;
   }
 
   .badge-released {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
-    background: rgba(16, 185, 129, 0.12);
-    color: #10B981;
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    @apply inline-flex items-center gap-1.5 px-3 py-1 border-2 border-black text-xs font-bold text-black;
+    background: var(--color-emerald);
+    box-shadow: 2px 2px 0px 0px #000000;
+    border-radius: 4px;
   }
 
   .badge-disputed {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
-    background: rgba(239, 68, 68, 0.12);
-    color: #EF4444;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    @apply inline-flex items-center gap-1.5 px-3 py-1 border-2 border-black text-xs font-bold text-black;
+    background: var(--color-red);
+    box-shadow: 2px 2px 0px 0px #000000;
+    border-radius: 4px;
   }
 
   /* ── Arca pulse indicator ────────────────────────────────────────── */
@@ -162,16 +207,15 @@
   .arca-pulse::before {
     content: '';
     @apply absolute inset-0 rounded-full;
-    background: rgba(139, 92, 246, 0.3);
+    background: rgba(168, 85, 247, 0.4);
     animation: arca-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 
   /* ── Grid background ─────────────────────────────────────────────── */
   .grid-bg {
-    background-image: var(--tw-gradient-accord),
-      linear-gradient(rgba(79, 142, 247, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(79, 142, 247, 0.04) 1px, transparent 1px);
-    background-size: auto, 48px 48px, 48px 48px;
+    background-image: 
+      radial-gradient(circle at 1px 1px, #1c1e2a 1px, transparent 0);
+    background-size: 24px 24px;
   }
 
   /* ── Shimmer loading ─────────────────────────────────────────────── */
@@ -179,7 +223,7 @@
     background: linear-gradient(
       90deg,
       var(--color-elevated) 25%,
-      rgba(79, 142, 247, 0.06) 50%,
+      rgba(255, 255, 255, 0.05) 50%,
       var(--color-elevated) 75%
     );
     background-size: 200% 100%;
@@ -189,21 +233,18 @@
 
 @layer utilities {
   .text-gradient-accord {
-    background: linear-gradient(135deg, #4F8EF7 0%, #8B5CF6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    @apply text-white font-black;
+    text-shadow: 2px 2px 0px #3E8BFF, 4px 4px 0px #A855F7;
   }
 
   .text-gradient-emerald {
-    background: linear-gradient(135deg, #10B981 0%, #4F8EF7 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    @apply text-white font-black;
+    text-shadow: 2px 2px 0px #10B981, 4px 4px 0px #3E8BFF;
   }
 
   .border-gradient-accord {
-    border-image: linear-gradient(135deg, #4F8EF7, #8B5CF6) 1;
+    border: 4px solid #000000;
+    box-shadow: 4px 4px 0px 0px var(--color-blue), 8px 8px 0px 0px var(--color-violet);
   }
 }
 
@@ -226,6 +267,6 @@
 }
 
 @keyframes border-fill-emerald {
-  0% { border-color: #4F8EF7; box-shadow: 0 0 0 rgba(79, 142, 247, 0); }
-  100% { border-color: #10B981; box-shadow: 0 0 24px rgba(16, 185, 129, 0.3); }
+  0% { border-color: #000000; box-shadow: 4px 4px 0px 0px #000000; }
+  100% { border-color: #10B981; box-shadow: 6px 6px 0px 0px #000000, 0 0 20px rgba(16, 185, 129, 0.4); }
 }
