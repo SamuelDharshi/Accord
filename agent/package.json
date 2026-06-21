@@ -1,0 +1,37 @@
+{
+  "name": "accord-agent",
+  "version": "1.0.0",
+  "description": "Arca — Autonomous AI verification and payment agent for Accord",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:phase2": "vitest run src/test/walrus-live.test.ts",
+    "test:phase3": "vitest run src/test/arca-executor.test.ts",
+    "test:all": "vitest run --reporter=verbose"
+  },
+  "dependencies": {
+    "groq-sdk": "^0.3.2",
+    "@mysten/sui": "^1.21.0",
+    "@mysten/walrus": "^0.3.0",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pdfkit": "^0.15.1",
+    "winston": "^3.17.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "@types/pdfkit": "^0.13.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.9"
+  }
+}

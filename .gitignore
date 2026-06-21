@@ -36,3 +36,6 @@ contracts/build/
 *.tmp
 *.temp
 test-results-agent.txt
+
+# Lock files (auto-generated, too noisy for commits)
+package-lock.json
