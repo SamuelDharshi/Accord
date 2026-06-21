@@ -1,43 +1,46 @@
 # Accord Project Feedback & Suggestions
 
-This document compiles technical and user experience (UX) feedback identified during the implementation, testing, and deployment of the Accord platform.
+This document summarizes key technical and user experience observations identified during the development, testing, and deployment of the Accord platform.
 
----
+## 1. Arca Verification & Notification Experience
 
-## 🔍 1. Arca Verification & Notification UX
+### Observation
 
-### The Issue
-- When the Arca AI agent returns a verdict like `REVIEW` or `FAIL`, the frontend states: **"Arca verdict: REVIEW. Check notifications."**
-- However, there is currently **no dedicated notifications page or panel** in the frontend application. The verdict can only be viewed in the purple `arcaStatus` banner on the Covenant Detail page (`/covenant/[id]`).
+When the Arca AI agent returns a verdict such as **REVIEW** or **FAIL**, the frontend displays a message instructing users to "check notifications." However, there is currently no dedicated notifications interface. Users can only view the verdict through the status banner on the Covenant Details page.
 
-### Recommendations
-1. **Dedicated Notification Center**: Add a notification bell icon in the main Navigation Bar that lists recent contract updates, agent decisions, and dispute alerts.
-2. **Expose Detailed Agent Feedback**:
-   - The Arca verifier engine produces a detailed markdown `specific_feedback` string explaining exactly what matched or failed during verification.
-   - This detailed feedback should be displayed directly in the UI under the milestone details, rather than just changing the status badge. This will help contractors immediately understand what changes are needed to pass verification.
+### Suggestions
 
----
+* Introduce a notification center accessible from the main navigation to surface agent decisions, milestone updates, payment releases, and dispute-related events.
+* Display the verifier's detailed feedback directly within the milestone view. The Arca verification engine already generates a detailed explanation describing what requirements were satisfied or missing. Exposing this information would help contractors understand exactly what needs to be improved before resubmission.
 
-## 🛠️ 2. Frontend Tech Stack & Vercel Deployment
+## 2. Frontend Deployment Experience
 
-### The Issue
-- When deploying the frontend to Vercel, Next.js static site generation (SSG) fails because of `@mysten/dapp-kit`'s dependency on browser-only globals (like `window` and `localStorage`).
-- This causes build-time crashes when pages are statically pre-rendered.
+### Observation
+
+Deploying the frontend to Vercel can be challenging because dependencies from `@mysten/dapp-kit` rely on browser-specific APIs such as `window` and `localStorage`. This may cause failures during static generation.
 
 ### Current Workaround
-- Added `export const dynamic = 'force-dynamic'` to Next.js page files to bypass static optimization.
 
-### Recommendations
-- Replace the force-dynamic workaround with client-side dynamic imports for any components importing or using dapp-kit hooks/providers:
-  ```tsx
-  import dynamic from 'next/dynamic';
-  const WalletProviderWrapper = dynamic(() => import('@/components/WalletProvider'), { ssr: false });
-  ```
-- This allows pages to still benefit from static/incremental regeneration where applicable.
+Pages were configured as dynamic to avoid build-time rendering issues.
 
----
+### Suggestions
 
-## 📈 3. Developer & Demo Experience
+Consider dynamically importing wallet-related components with server-side rendering disabled. This keeps browser-dependent logic on the client while preserving static optimization benefits for the rest of the application.
 
-- **Mock Verification for Testing**: During demos or local development, it is helpful to have a "Mock Agent Success" switch or allow the uploading of a simple `.txt` file with text that matches the milestone description to trigger a quick `PASS`.
-- **Gas Fee Estimates**: Provide users with clear warnings about Sui gas fees before executing contract creation or proof certificate minting.
+Benefits include:
+
+* Improved deployment reliability
+* Better performance through static generation where possible
+* Cleaner separation between wallet functionality and page rendering
+
+## 3. Developer & Demo Experience
+
+### Suggestions
+
+* Add a mock verification mode for local development and demonstrations. This would allow developers to quickly test milestone approval flows without relying on full AI verification.
+* Allow simple text-based deliverables during testing to trigger successful verification when milestone requirements are met.
+* Display estimated Sui gas fees before contract creation, milestone approval, or certificate generation so users better understand transaction costs before signing.
+
+## Conclusion
+
+The overall architecture and workflow are well designed. These improvements primarily focus on enhancing transparency, deployment reliability, and the developer experience, helping both users and contributors interact with the platform more effectively.
