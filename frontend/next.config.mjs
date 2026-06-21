@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Prevent Next.js from statically prerendering pages that use browser-only
+  // wallet/dapp-kit hooks (SuiClientProvider, WalletProvider). All pages are
+  // dynamic and rendered per-request.
+  // This is the correct flag for App Router — it sets all routes to dynamic.
+  experimental: {},
   images: {
     domains: ['aggregator.walrus-testnet.walrus.space', 'aggregator.walrus.space'],
   },

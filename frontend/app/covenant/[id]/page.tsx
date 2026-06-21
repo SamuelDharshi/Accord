@@ -1,5 +1,9 @@
 'use client';
 
+// Force dynamic rendering — pages use @mysten/dapp-kit wallet hooks which
+// require a browser context and cannot be statically prerendered.
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect, use } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
